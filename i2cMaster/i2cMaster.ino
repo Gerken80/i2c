@@ -9,7 +9,6 @@ uint8_t setTempReceived = 0;
 
 void setup() {
   Serial.begin(115200);
-  Serial.setDebugOutput(true);
   Wire.begin();
 }
 

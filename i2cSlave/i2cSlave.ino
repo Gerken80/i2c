@@ -32,9 +32,10 @@ void onReceive(int len)
 }
 
 /* 
-  Checks the 8th Byte '7' to see if the number is negative, and if so makes it correctly signed.
+  Convert uint8_t to int. Bit of a hack job but it works for this case.
+  Checks the 8th Byte '0000 0000 1000 0000' to see if the number is negative, and if so makes it correctly signed.
   Numbers passed greater than 127 will flip this bit and become signed at a value 128 lower than passed.
-  -256 sets the Most Significant 14 Bytes to 1.
+  -256 sets the Most Significant 8 Bits to 1.
 */
 int FixSign (int x)
 {
