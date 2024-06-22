@@ -31,6 +31,11 @@ void onReceive(int len)
   Serial.println(tOut);
 }
 
+/* 
+  Checks the 8th Byte '7' to see if the number is negative, and if so makes it correctly signed.
+  Numbers passed greater than 127 will flip this bit and become signed at a value 128 lower than passed.
+  -256 sets the Most Significant 14 Bytes to 1.
+*/
 int FixSign (int x)
 {
   int result;
