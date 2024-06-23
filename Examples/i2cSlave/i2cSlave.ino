@@ -1,57 +1,38 @@
 //ESP32S3
+//This is not designed for end use. It's for people new to I2C to get an idea of what is going.
 
 #include "Wire.h"
 
-#define I2C_DEV_ADDR 0x55
-#define SDA_PIN 21
-#define SCL_PIN 33
-#define uint8_High_Byte 7
+#define THIS_I2C_ADDRESS 0x55   // Address
+#define SDA_PIN 21              // SDA Pin, if the defult is not used
+#define SCL_PIN 33              // SCL Pin, if the defult is not used
 
-uint8_t setTempToSendOut = 28;
-int tIn = 0;
-int tOut = 0;
+uint8_t uint8_to_send = 45;     // Send a number - 0 to 255
 
-//Write to the Master
+/////////// WRITE TO MASTER ////////////////
 void onRequest() 
 {
-   Wire1.write(setTempToSendOut);
+   Wire.write(uint8_to_send);
 }
+////////// END WRITE TO THE MASTER ////////////
 
-//Read from the Master
+///////////// RECEIVE FROM MASTER /////////////
 void onReceive(int len)
-{
-  tOut = 0;
-  tIn = Wire1.read();
-  tOut = Wire1.read();
+{ 
+  uint8_t uint8_t_from_master = Wire.read();
 
-  tIn = FixSign(tIn);
-  tOut = FixSign(tOut);
-
-  Serial.println(tIn);
-  Serial.println(tOut);
+  Serial.println(len);                  // Number of bytes received from Master
+  Serial.println(uint8_t_from_master);  // uint8_t received from Master
 }
-
-/* 
-  Convert uint8_t to int. Bit of a hack job but it works for this case.
-  Checks the 8th Bit '0000 0000 1000 0000' to see if the number is negative, and if so makes it correctly signed.
-  Numbers passed greater than 127 will flip this bit and become signed at a value 128 lower than passed.
-  -256 sets the Most Significant 8 Bits to 1.
-*/
-int FixSign (int x)
-{
-  int result;
-   if ((bool)bitRead(x,uint8_High_Byte))  {result = x -256;}
-  else  {result = x;}
-  return result;
-}
+///////////// END RECEIVE FROM MASTER /////////////
 
 void setup()
  {
-  Serial.begin(115200);
-  Wire1.onReceive(onReceive);
-  Wire1.onRequest(onRequest);
-  Wire1.setPins(SDA_PIN,SCL_PIN);
-  Wire1.begin((uint8_t)I2C_DEV_ADDR);
+  Serial.begin(115200);                   // Start serial comunication at 115200 baud. Match the Serial Monitor to this.
+  Wire.onReceive(onReceive);              // Initiate onReceive
+  Wire.onRequest(onRequest);              // Initiate onReceive
+  Wire.setPins(SDA_PIN,SCL_PIN);          // Set non defult pins
+  Wire.begin((uint8_t)THIS_I2C_ADDRESS);  // Initiate I2C as slave.
 }
 
-void loop() {}
+void loop() {} //Nothing needed in loop

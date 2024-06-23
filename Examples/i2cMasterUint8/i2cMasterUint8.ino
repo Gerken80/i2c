@@ -4,11 +4,10 @@
 
 #include "Wire.h"                       // Use the Wire library. As this is for ESP32 it not identical to other Wire libraries
 #define I2C_SLAVE_ADDRESS 0x55          // Address of Slave devive - Get this from the Slave
-#define QUANTITY_BYTES_TO_RECEIVE 2     // 1 to 16
+#define QUANTITY_BYTES_TO_RECEIVE 1     // 1 to 16
 #define STOP true                       // true - Release the bus / false - keep the connection alive
 
 uint8_t uint8_to_send = 46;             // Send a number - 0 and 255
-uint8_t uint8_from_slave = 0;           // Receive a number - 0 to 255
 
 void setup() {
   Serial.begin(115200);                 //Start serial comunication at 115200 baud. Match the Serial Monitor to this.
@@ -42,13 +41,13 @@ void loop() {
   */
   //uint8_from_slave = 0;
 
-  //////////////////////////////////// WRITE TO SLAVE //////////////////////////////////////////
+  //////////////////////////////////// RECEIVE FROM SLAVE //////////////////////////////////////////
   uint8_t bytesReceived = Wire.requestFrom(I2C_SLAVE_ADDRESS, QUANTITY_BYTES_TO_RECEIVE, STOP);
   uint8_t uint8_from_slave = Wire.read(); // Note below..
 
   Serial.println(bytesReceived);
   Serial.println(uint8_from_slave);
-  ////////////////////////////////// END WRITE TO SLAVE /////////////////////////////////////////
+  ////////////////////////////////// RECEIVE FROM SLAVE /////////////////////////////////////////
 
   /*
   Note. 
